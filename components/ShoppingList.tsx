@@ -2,7 +2,6 @@ import React, {useState} from 'react';
 import {
   SafeAreaView,
   TextInput,
-  Button,
   View,
   StyleSheet,
   FlatList,
@@ -97,47 +96,56 @@ function ShoppingList() {
   return (
     <View style={styles.container}>
       <View style={styles.inputContainer}>
-        <TextInput
-          style={styles.input}
-          value={itemName}
-          onChangeText={setItemName}
-          placeholder="상품 이름"
-        />
-        <Picker
-          style={styles.picker}
-          selectedValue={selectedBrand}
-          onValueChange={itemValue => setSelectedBrand(itemValue)}>
-          <Picker.Item
-            label="Select a Brand"
-            value=""
-            style={styles.pickerItem1}
+        <View style={styles.inputblock}>
+          <TextInput
+            style={styles.input}
+            value={itemName}
+            onChangeText={setItemName}
+            placeholder="상품 이름"
           />
-          {brands.map(brand => (
+          <Picker
+            style={styles.picker}
+            selectedValue={selectedBrand}
+            onValueChange={itemValue => setSelectedBrand(itemValue)}>
             <Picker.Item
-              key={brand}
-              label={brand}
-              value={brand}
-              style={
-                selectedBrand === brand
-                  ? styles.pickerItem3
-                  : styles.pickerItem2
-              }
+              label="Select a Brand"
+              value=""
+              style={styles.pickerItem1}
             />
-          ))}
-        </Picker>
-        <Button title="추가" onPress={handleAddItem} />
+            {brands.map(brand => (
+              <Picker.Item
+                key={brand}
+                label={brand}
+                value={brand}
+                style={
+                  selectedBrand === brand
+                    ? styles.pickerItem3
+                    : styles.pickerItem2
+                }
+              />
+            ))}
+          </Picker>
+        </View>
+        <TouchableOpacity style={styles.addButton} onPress={handleAddItem}>
+          <Icon name="add" size={24} color="white" />
+        </TouchableOpacity>
       </View>
       <FlatList
         data={items}
         keyExtractor={item => item.id.toString()}
         renderItem={({item}) => (
           <View style={styles.itemContainer}>
-            <Image source={require('./example.png')} style={styles.itemImage} />
+            <Image
+              source={require('../img/example.png')}
+              style={styles.itemImage}
+            />
             <View style={styles.itemInfo}>
               <Text style={styles.itemName}>{item.name}</Text>
               <Text style={styles.itemBrand}>{item.brand}</Text>
               <Text style={styles.itemAT}>
-                {item.createdAt.toLocaleString()}
+                {item.createdAt instanceof Date
+                  ? item.createdAt.toLocaleString()
+                  : ''}
               </Text>
             </View>
             <View style={styles.actionButtonsContainer}>
@@ -221,21 +229,43 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
+    backgroundColor: '#F5F6F8',
   },
   inputContainer: {
     flexDirection: 'row',
     marginBottom: 16,
+    backgroundColor: '#fff',
+    padding: 5,
+    borderRadius: 10,
+  },
+
+  inputblock: {
+    flex: 1,
+    flexDirection: 'column',
+    padding: 10,
   },
   input: {
-    flex: 1,
+    height: 40,
+    borderRadius: 10,
     marginRight: 8,
     borderWidth: 1,
     borderColor: 'gray',
     paddingHorizontal: 8,
     paddingVertical: 4,
   },
+  addButton: {
+    backgroundColor: '#494949',
+    borderRadius: 10,
+    padding: 10,
+    marginRight: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: 40,
+  },
   picker: {
-    flex: 1,
+    marginBottom: 8,
+    borderWidth: 1,
+    borderColor: 'gray',
   },
   pickerItem1: {
     fontSize: 20,
@@ -253,6 +283,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 8,
+    backgroundColor: '#fff',
+    padding: 10,
+    borderRadius: 10,
   },
   itemImage: {
     width: 100,
